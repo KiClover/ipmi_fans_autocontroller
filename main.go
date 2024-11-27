@@ -34,6 +34,7 @@ func main() {
 	fmt.Println(e)
 
 	for {
+		// 获取温度
 		cpuTemp, err := temp.CpuTemperature()
 		if err != nil {
 			logrus.Warnf("get cpu temperature err: %v", err)
@@ -44,6 +45,10 @@ func main() {
 			logrus.Warnf("get gpu temperature err: %v", err)
 		}
 		logrus.Infof("gpus temperature: %v", gpuTemp)
+		// 获取需求风扇转速与自动控制转速等级
+		level, speed := temp.TempLevelCheck(append(cpuTemp, gpuTemp...), conf)
+		logrus.Infof("controller level: %d , fans speed: %d", level, speed)
+		// 监测间隔控制
 		time.Sleep(time.Duration(conf.Monitor.Duration) * time.Second)
 	}
 }

@@ -10,26 +10,26 @@ type TempLevel struct {
 }
 
 type Level1FansSpeedConfig struct {
-	Temp  float64
+	Temp  int
 	Speed int
 }
 
 type Level2FansSpeedConfig struct {
-	Temp  float64
+	Temp  int
 	Speed int
 }
 
 type Level3FansSpeedConfig struct {
-	Temp  float64
+	Temp  int
 	Speed int
 }
 
 type Level4FansSpeedConfig struct {
-	Temp  float64
+	Temp  int
 	Speed int
 }
 
 type Level5FansSpeedConfig struct {
-	Temp  float64
+	Temp  int
 	Speed int
 }
