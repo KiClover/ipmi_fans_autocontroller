@@ -1,7 +1,7 @@
 package model
 
-// CpuTempLevel CPU温度等级
-type CpuTempLevel struct {
+// TempLevel CPU温度等级
+type TempLevel struct {
 	Level1 Level1FansSpeedConfig
 	Level2 Level2FansSpeedConfig
 	Level3 Level3FansSpeedConfig

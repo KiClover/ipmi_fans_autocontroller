@@ -1,0 +1,21 @@
+logLevel: 4
+
+tempLevel:
+  level1:
+    temp: 40.0
+    speed: 30
+  level2:
+    temp: 50.0
+    speed: 50
+  level3:
+    temp: 60.0
+    speed: 70
+  level4:
+    temp: 70.0
+    speed: 90
+  level5:
+    temp: 80.0
+    speed: 100
+
+monitor:
+  duration: 10 # 监测间隔，单位 秒

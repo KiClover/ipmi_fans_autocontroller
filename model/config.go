@@ -1,5 +1,7 @@
 package model
 
 type Config struct {
-	CpuTempLevel CpuTempLevel
+	LogLevel  int
+	TempLevel TempLevel
+	Monitor   MonitorConfig
 }
