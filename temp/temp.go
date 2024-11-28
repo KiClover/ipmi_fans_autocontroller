@@ -20,7 +20,7 @@ func maxInt(arr []int) (int, error) {
 	return maxValue, nil
 }
 
-func TempLevelCheck(temp []int, conf model.Config) (level int, speed int) {
+func LevelCheck(temp []int, conf model.Config) (level int, speed int) {
 	var levels []int
 	for i := 0; i < len(temp); i++ {
 		if temp[i] >= conf.TempLevel.Level1.Temp && temp[i] < conf.TempLevel.Level2.Temp {
