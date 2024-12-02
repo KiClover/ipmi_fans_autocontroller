@@ -96,3 +96,27 @@ func ControlFansByWeb(speed int, conf model.Config, c *cache.Cache) error {
 	}
 	return nil
 }
+
+func SessionExit(conf model.Config, c *cache.Cache) {
+	session, _ := c.Get("QSESSIONID")
+	token, _ := c.Get("CSRFToken")
+	// 初始化http请求库
+	client := resty.New()
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	// 登录Request
+	post, err := client.R().SetCookie(&http.Cookie{
+		Name:  "QSESSIONID",
+		Value: session.(string),
+	}).SetHeader("x-csrftoken", token.(string)).
+		SetHeader("X-Requested-With", "XMLHttpRequest").
+		Delete(conf.Ipmi.Host + "/api/session")
+	if err != nil {
+		logrus.Warnf("clear session & exit error: %v", err)
+		return
+	}
+	if post.StatusCode() != 200 {
+		logrus.Warnf("clear session & exit error: %v", err)
+		return
+	}
+	return
+}

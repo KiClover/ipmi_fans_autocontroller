@@ -6,9 +6,13 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"os"
+	"os/signal"
+	"serverTemperature/api"
 	"serverTemperature/ipmi"
 	"serverTemperature/model"
 	"serverTemperature/temp"
+	"syscall"
 	"time"
 )
 
@@ -34,8 +38,28 @@ func main() {
 	logrus.SetLevel(logrus.Level(conf.LogLevel))
 	// 初始化KV缓存数据库
 	c := cache.New(600*time.Second, 60*time.Second)
+	// 退出进程监听
+	s := make(chan os.Signal)
+	signal.Notify(s, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	go func() {
+		for s := range s {
+			switch s {
+			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
+				logrus.Infof("ready to session clear,exit signal: %v", s)
+				ipmi.SessionExit(conf, c)
+				os.Exit(0)
+			}
+		}
+	}()
+	// 获取Cookie
 	_ = ipmi.WebLogin(conf, c)
 	go ipmi.RefreshClock(conf, c)
+	// 启动Gin服务器进程
+	ginApi := api.Api{
+		Conf: conf,
+		C:    c,
+	}
+	go ginApi.New()
 	for {
 		// 获取温度
 		cpuTemp, err := temp.CpuTemperature()
