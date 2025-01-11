@@ -9,18 +9,21 @@ import (
 
 type Api struct {
 	gin  *gin.Engine
-	Conf model.Config
+	Conf *model.Config
 	C    *cache.Cache
 }
 
-func (l Api) New() {
+func New(conf *model.Config, c *cache.Cache) *Api {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
-	l.gin = r
-	l.Router()
-	l.Run(":8080")
+	return &Api{
+		gin:  r,
+		Conf: conf,
+		C:    c,
+	}
 }
-func (l Api) Run(port string) {
+func (l *Api) Run(port string) {
+	l.Router()
 	err := l.gin.Run(port)
 	if err != nil {
 		logrus.Warn("Gin server start error: %v", err)

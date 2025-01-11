@@ -5,4 +5,5 @@ type Config struct {
 	TempLevel TempLevel
 	Monitor   MonitorConfig
 	Ipmi      IpmiConfig
+	WebEnable bool `json:"webEnable"`
 }

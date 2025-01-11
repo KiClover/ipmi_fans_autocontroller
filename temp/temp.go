@@ -23,6 +23,9 @@ func maxInt(arr []int) (int, error) {
 func LevelCheck(temp []int, conf model.Config) (level int, speed int) {
 	var levels []int
 	for i := 0; i < len(temp); i++ {
+		if temp[i] < conf.TempLevel.Level1.Temp {
+			levels = append(levels, 1)
+		}
 		if temp[i] >= conf.TempLevel.Level1.Temp && temp[i] < conf.TempLevel.Level2.Temp {
 			levels = append(levels, 1)
 		}
@@ -39,10 +42,12 @@ func LevelCheck(temp []int, conf model.Config) (level int, speed int) {
 			levels = append(levels, 5)
 		}
 	}
+	// Debug 使用
+	logrus.Debugf("levels arrays: %v", levels)
 	level, err := maxInt(levels)
 	if err != nil {
 		logrus.Warnf("comparison function error: %v", err)
-		return 3, conf.TempLevel.Level3.Speed
+		return 2, conf.TempLevel.Level2.Speed
 	}
 	switch level {
 	case 1:

@@ -55,11 +55,10 @@ func main() {
 	_ = ipmi.WebLogin(conf, c)
 	go ipmi.RefreshClock(conf, c)
 	// 启动Gin服务器进程
-	ginApi := api.Api{
-		Conf: conf,
-		C:    c,
+	if conf.WebEnable {
+		ginApi := api.New(&conf, c)
+		go ginApi.Run("8088")
 	}
-	go ginApi.New()
 	for {
 		// 获取温度
 		cpuTemp, err := temp.CpuTemperature()
@@ -73,7 +72,12 @@ func main() {
 		}
 		logrus.Infof("gpus temperature: %v", gpuTemp)
 		// 获取需求风扇转速与自动控制转速等级
-		level, speed := temp.LevelCheck(append(cpuTemp, gpuTemp...), conf)
+		var totalTemp []int
+		totalTemp = append(totalTemp, cpuTemp...)
+		totalTemp = append(totalTemp, gpuTemp...)
+		// Debug 使用
+		logrus.Debugf("total temperature array: %v", totalTemp)
+		level, speed := temp.LevelCheck(totalTemp, conf)
 		logrus.Infof("controller level: %d , fans speed: %d", level, speed)
 		lv, isLevelFound := c.Get("level")
 		if isLevelFound {

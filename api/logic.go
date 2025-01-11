@@ -7,10 +7,10 @@ import (
 	"strconv"
 )
 
-func (l Api) SpeedControlLogic(context *gin.Context) {
+func (l *Api) SpeedControlLogic(context *gin.Context) {
 	s := context.Query("speed")
 	speed, _ := strconv.Atoi(s)
-	err := ipmi.ControlFansByWeb(speed, l.Conf, l.C)
+	err := ipmi.ControlFansByWeb(speed, *l.Conf, l.C)
 	if err != nil {
 		logrus.Warn("control fans speed api error: %v", err)
 		context.JSON(500, gin.H{
@@ -21,4 +21,11 @@ func (l Api) SpeedControlLogic(context *gin.Context) {
 	context.JSON(200, gin.H{
 		"message": "control fans speed success",
 	})
+}
+
+func (l *Api) AutoControlStatus(context *gin.Context) {
+	s := context.Query("status")
+	if s == "true" {
+		logrus.Infof("Enable auto control")
+	}
 }
