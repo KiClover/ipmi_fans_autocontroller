@@ -3,16 +3,16 @@ logLevel: 4
 tempLevel:
   level1:
     temp: 40
-    speed: 30
+    speed: 20
   level2:
     temp: 50
-    speed: 50
+    speed: 30
   level3:
     temp: 60
-    speed: 70
+    speed: 30
   level4:
     temp: 70
-    speed: 90
+    speed: 30
   level5:
     temp: 80
     speed: 100
@@ -21,6 +21,8 @@ monitor:
   duration: 10 # 监测间隔，单位 秒
 
 ipmi:
-  host: 127.0.0.1
-  user: root
-  pwd: calvin
+  host: https://192.168.1.100
+  user: tool
+  pwd: 000
+
+webEnable: true
